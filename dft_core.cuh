@@ -9,8 +9,7 @@
   #define RESTR
 #endif
 
-#define TPB 128                                                 // 1 block = 1 frame = 128 frequencies = 128 threads
-#define PI 3.1416f
+#define PI 3.14159265359f
 
 #include "complexf.cuh"
 #include "matrix.cuh"
@@ -30,6 +29,8 @@ GLB void dft_kernel(const float* RESTR audio_data,              // input array
     int f_idx = blockIdx.x;
     int k     = threadIdx.x;
 
+    if (k >= (int)out.col) return;
+
     float* out_this = &out[f_idx][k];
 
     int start_idx = f_idx * dsf;
@@ -37,8 +38,6 @@ GLB void dft_kernel(const float* RESTR audio_data,              // input array
         *out_this = 0;
         return;
     }
-
-    if (k >= (int)out.col) return;
 
     float f = frequencies[k];
 

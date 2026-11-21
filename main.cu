@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
     *   <audio_path>
     *   <sample_rate>
     *   <sample_per_frame>
+    *   <samples_between_frames>
     *   <total_samples>
     *   <bar_count>
     *   [<f0> <f1>...]
