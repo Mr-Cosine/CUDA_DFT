@@ -22,6 +22,7 @@ GLB void dft_kernel(const float* RESTR audio_data,              // input array
                     const float* RESTR frequencies,             // all the frequencies
                     const int sample_rate,                      // sample rate (Hz)
                     const int spf,                              // #sample per frame
+                    const int dsf,                              // distance between frames
                     const int total_sample_count,               // #sample point in total
                     matrixf out                                 // output array
                    ) {
@@ -29,10 +30,15 @@ GLB void dft_kernel(const float* RESTR audio_data,              // input array
     int f_idx = blockIdx.x;
     int k     = threadIdx.x;
 
-    int start_idx = f_idx * spf;
-    int end_idx = (total_sample_count > (f_idx+1) * spf) ? 
-                        (f_idx+1) * spf :
-                        total_sample_count;
+    float* out_this = &out[f_idx][k];
+
+    int start_idx = f_idx * dsf;
+    if (start_idx + spf > total_sample_count) {                 // window would run past the end
+        *out_this = 0;
+        return;
+    }
+
+    if (k >= (int)out.col) return;
 
     float f = frequencies[k];
 
@@ -40,13 +46,6 @@ GLB void dft_kernel(const float* RESTR audio_data,              // input array
 
     complexf theta(1.0f, 0.0f);                                 // sine wave
     complexf dtheta(cos(-angle), sin(-angle));
-
-    float* out_this = &out[f_idx][k];
-
-    if (end_idx - start_idx < spf) {
-        *out_this = 0;
-        return;
-    }                                                           // EOF - break and just give a bin = 0 back
 
     complexf acc(0.0f, 0.0f);
     float ncoeff = 0.0f;
