@@ -65,11 +65,13 @@ norm_dB = np.clip((db - DB_MIN) / (DB_MAX - DB_MIN), 0, 1)  # 0..1 bar heights
 
 song = {
         "info":
-            {"file": os.path.split(*file_path)[-1], 
-            "frame_frequency": frame_frequency_hz, 
-            "sample_per_frame": sample_per_frame
+            {
+                "wav_path": "",
+                "title": "Track",
+                "name": (os.path.split(*file_path)[-1]).replace(".wav", ""), 
+                "artist": "Artist",
+                "frame_frequency": frame_frequency_hz
             },
-        "frequencies": {i:float(f) for i,f in enumerate(freqs)},
         "data": {}
         }
 for i, row in enumerate(norm_dB): 
@@ -80,8 +82,8 @@ for i, row in enumerate(norm_dB):
 
 folder_path = pc.select_folder(prompt="select where you want to export the processed file to")
 
-with open(os.path.join(folder_path, f"{song["info"]["file"]}_spectrum.json"), "w") as file:
-    json.dumps(song, file, indent=4)
+with open(os.path.join(folder_path, f"{song["info"]["name"]}.json"), "w") as file:
+    json.dump(song, file, indent=4)
 
 pc.clear_screen()
 
