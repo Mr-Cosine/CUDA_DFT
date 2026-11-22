@@ -1,3 +1,6 @@
+#ifndef MATRIX_H
+#define MATRIX_H
+
 #ifdef __CUDACC__
   #define HD __host__ __device__
 #else
@@ -24,3 +27,5 @@ public:
     HD T*       operator[](std::size_t r)       { return data + r * col; }
     HD const T* operator[](std::size_t r) const { return data + r * col; }
 };
+
+#endif

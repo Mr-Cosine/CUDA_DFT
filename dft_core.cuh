@@ -11,8 +11,8 @@
 
 #define PI 3.14159265359f
 
-#include "complexf.cuh"
-#include "matrix.cuh"
+#include "complexf.h"
+#include "matrix.h"
 
 typedef Complex<float> complexf;
 typedef Matrix<float> matrixf;
