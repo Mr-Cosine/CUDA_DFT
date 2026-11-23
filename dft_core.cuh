@@ -44,7 +44,7 @@ GLB void dft_kernel(const float* RESTR audio_data,              // input array
     float angle = 2*PI*f/sample_rate;
 
     complexf theta(1.0f, 0.0f);                                 // sine wave
-    complexf dtheta(cos(-angle), sin(-angle));
+    complexf dtheta(cosf(-angle), sinf(-angle));
 
     complexf acc(0.0f, 0.0f);
     float ncoeff = 0.0f;

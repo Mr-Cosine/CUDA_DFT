@@ -10,11 +10,10 @@ import time
 import json
 
 frame_length_hz = 5
-frame_frequency_hz = 120
+frame_frequency_hz = 30
 lower_f = 20
 upper_f = 20000
 bar_count = 16
-max_bar_length = 20
 
 file_path = pc.select_files(file_types=["wav"])
 
@@ -72,21 +71,26 @@ song = {
                 "artist": "Artist",
                 "frame_frequency": frame_frequency_hz
             },
-        "data": {}
+        "data": []
         }
 for i, row in enumerate(norm_dB): 
-    frame = {}
-    for j, bin in enumerate(row):
-        frame[f"{j}"] = float(bin)
-    song["data"].update({i:frame})
+    frame = []
+    for bin in row:
+        frame.append(float(bin))
+    song["data"].append(frame)
 
 folder_path = pc.select_folder(prompt="select where you want to export the processed file to")
 
 with open(os.path.join(folder_path, f"{song["info"]["name"]}.json"), "w") as file:
     json.dump(song, file, indent=4)
 
-pc.clear_screen()
 
+
+
+
+
+pc.clear_screen()
+max_bar_length = 20
 def printbar(row):
     frame = ""
     for i,b in enumerate(row):
