@@ -15,6 +15,8 @@ lower_f = 20
 upper_f = 20000
 bar_count = 16
 
+decimal_place = 2
+
 file_path = pc.select_files(file_types=["wav"])
 
 data, sample_rate = sf.read(*file_path, dtype="float32")
@@ -28,7 +30,7 @@ dframe = int(sample_rate // frame_frequency_hz)
 freqs = np.geomspace(lower_f, upper_f, bar_count).astype(np.float32)
 
 # ---- load the CUDA DLL ----
-lib  = ctypes.CDLL(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "dft.dll"))
+lib  = ctypes.CDLL(os.path.join(os.path.dirname (os.path.abspath(__file__)), "lib", "dft.dll"))
 
 c_float_p = ctypes.POINTER(ctypes.c_float)
 lib.audio_dft.argtypes = [c_float_p,                        # output (frames × bar_count)
@@ -66,8 +68,7 @@ song = {
         "info":
             {
                 "wav_path": "",
-                "title": "Track",
-                "name": (os.path.split(*file_path)[-1]).replace(".wav", ""), 
+                "title": (os.path.split(*file_path)[-1]).replace(".wav", ""),
                 "artist": "Artist",
                 "frame_frequency": frame_frequency_hz
             },
@@ -76,12 +77,12 @@ song = {
 for i, row in enumerate(norm_dB): 
     frame = []
     for bin in row:
-        frame.append(float(bin))
+        frame.append(round(float(bin), decimal_place))
     song["data"].append(frame)
 
 folder_path = pc.select_folder(prompt="select where you want to export the processed file to")
 
-with open(os.path.join(folder_path, f"{song["info"]["name"]}.json"), "w") as file:
+with open(os.path.join(folder_path, f"{song["info"]["title"]}.json"), "w") as file:
     json.dump(song, file, indent=4)
 
 
